@@ -1,24 +1,7 @@
 {
-  "npmScope": "flight-workspace",
-  "affected": {
-    "defaultBase": "master"
-  },
-  "implicitDependencies": {
-    "angular.json": "*",
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
-    },
-    "tsconfig.base.json": "*",
-    "tslint.json": "*",
-    ".eslintrc.json": "*",
-    "nx.json": "*"
-  },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "--cacheDirectory": "c:\\temp\\cache"
       }
     }
@@ -32,59 +15,85 @@
       }
     }
   },
-  "projects": {
-    "flight-app-e2e": {
-      "tags": ["e2e"],
-      "implicitDependencies": ["flight-app"]
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "defaultProject": "flight-app",
+  "generators": {
+    "@nx/angular:application": {
+      "style": "css",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
     },
-    "flight-admin-e2e": {
-      "tags": ["e2e"],
-      "implicitDependencies": ["flight-admin"]
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
     },
-    "dashboard-e2e": {
-      "tags": ["e2e"],
-      "implicitDependencies": ["dashboard"]
+    "@nx/angular:component": {
+      "style": "css"
     },
-    "external-e2e": {
-      "tags": ["e2e"],
-      "implicitDependencies": ["external"]
-    },
-    "flight-app": {
-      "tags": ["domain:flights"]
-    },
-    "flight-admin": {
-      "tags": ["domain:flights"]
-    },
-    "flight-lib": {
-      "tags": ["domain:flights", "type:domain-logic"]
-    },
-    "logger-lib": {
-      "tags": ["domain:shared"]
-    },
-    "dashboard": {
-      "tags": ["domain:dashboard"]
-    },
-    "dashboard-lib": {
-      "tags": ["domain:dashboard", "type:domain-logic"]
-    },
-    "external": {
-      "tags": ["domain:external"]
-    },
-    "passenger-domain": {
-      "tags": ["domain:passenger", "type:domain-logic"]
-    },
-    "passenger": {
-      "tags": ["domain:passenger", "type:app"]
-    },
-    "passenger-e2e": {
-      "tags": [],
-      "implicitDependencies": ["passenger"]
-    },
-    "passenger-feature-search": {
-      "tags": ["domain:passenger", "type:feature"]
-    },
-    "passenger-feature-edit": {
-      "tags": ["domain:passenger", "type:feature"]
+    "@nx/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      },
+      "component": {
+        "style": "css"
+      }
     }
-  }
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": [
+      "{workspaceRoot}/angular.json",
+      "{workspaceRoot}/tsconfig.base.json",
+      "{workspaceRoot}/tslint.json",
+      "{workspaceRoot}/nx.json"
+    ],
+    "production": [
+      "default",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/src/test-setup.[jt]s"
+    ]
+  },
+  "targetDefaults": {
+    "build": {
+      "inputs": ["production", "^production"],
+      "cache": true
+    },
+    "test": {
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "cache": true
+    },
+    "e2e": {
+      "inputs": ["default", "^production"],
+      "cache": true
+    },
+    "@nx/jest:jest": {
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "cache": true,
+      "options": {
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "@nx/eslint:lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "cache": true
+    }
+  },
+  "parallel": 3,
+  "useInferencePlugins": false,
+  "defaultBase": "main"
 }
