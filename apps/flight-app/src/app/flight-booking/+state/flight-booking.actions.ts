@@ -1,10 +1,9 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { Flight } from '@flight-workspace/flight-lib';
 
 export const FlightBookingActions = createActionGroup({
   source: 'FlightBooking',
   events: {
-    'Load FlightBookings': emptyProps(),
-    
-    
+    loadFlightsSuccess: props<{ flights: Flight[] }>()
   }
 });
