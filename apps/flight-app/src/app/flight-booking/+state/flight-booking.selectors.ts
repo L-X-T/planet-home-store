@@ -13,3 +13,6 @@ export const selectFilteredFlights = createSelector(selectFlights, selectNegativ
 
 export const selectFlightsWithProps = (props: { blackList: number[] }) =>
   createSelector(selectFlights, (flights) => flights.filter((f) => !props.blackList.includes(f.id)));
+
+export const selectIsLoadingFlights = createSelector(featureSelector, (state) => state.isLoadingFlights);
+export const selectLoadingFlightsError = createSelector(featureSelector, (state) => state.loadingFlightsError);
