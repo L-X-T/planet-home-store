@@ -1,24 +1,15 @@
-import { createFeature, createReducer, on } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
+import { FlightBookingState, initialState } from './flight-booking.state';
 import { FlightBookingActions } from './flight-booking.actions';
 
 export const flightBookingFeatureKey = 'flightBooking';
 
-export interface State {
-
+export interface FlightBookingAppState {
+  [flightBookingFeatureKey]: FlightBookingState;
 }
-
-export const initialState: State = {
-
-};
 
 export const reducer = createReducer(
   initialState,
-  on(FlightBookingActions.loadFlightBookings, state => state),
 
+  on(FlightBookingActions.loadFlightsSuccess, (state, { flights }): FlightBookingState => ({ ...state, flights }))
 );
-
-export const flightBookingFeature = createFeature({
-  name: flightBookingFeatureKey,
-  reducer,
-});
-

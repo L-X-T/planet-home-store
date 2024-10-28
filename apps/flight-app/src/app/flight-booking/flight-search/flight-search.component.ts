@@ -2,6 +2,9 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component } from '@angular/core';
 import { Flight, FlightService } from '@flight-workspace/flight-lib';
+import { flightBookingFeatureKey, FlightBookingAppState } from '../+state/flight-booking.reducer';
+import { Store } from '@ngrx/store';
+import { FlightBookingActions } from '../+state/flight-booking.actions';
 
 @Component({
   selector: 'flight-search',
@@ -19,7 +22,12 @@ export class FlightSearchComponent {
     5: true
   };
 
-  constructor(private flightService: FlightService) {}
+  readonly flights$ = this.store.select((appState) => appState[flightBookingFeatureKey].flights);
+
+  constructor(
+    private flightService: FlightService,
+    private store: Store<FlightBookingAppState>
+  ) {}
 
   get flights(): Flight[] {
     return this.flightService.flights;
@@ -30,7 +38,16 @@ export class FlightSearchComponent {
       return;
     }
 
-    this.flightService.load(this.from, this.to, this.urgent);
+    // this.flightService.load(this.from, this.to, this.urgent);
+
+    this.flightService.find(this.from, this.to, this.urgent).subscribe({
+      next: (flights) => {
+        this.store.dispatch(FlightBookingActions.loadFlightsSuccess({ flights }));
+      },
+      error: (err) => {
+        console.error('error', err);
+      }
+    });
   }
 
   delay(): void {
