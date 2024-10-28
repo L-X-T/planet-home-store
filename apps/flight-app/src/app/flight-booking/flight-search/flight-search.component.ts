@@ -2,10 +2,11 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component } from '@angular/core';
 import { FlightService } from '@flight-workspace/flight-lib';
-import { flightBookingFeatureKey, FlightBookingAppState } from '../+state/flight-booking.reducer';
+import { FlightBookingAppState } from '../+state/flight-booking.reducer';
 import { Store } from '@ngrx/store';
 import { FlightBookingActions } from '../+state/flight-booking.actions';
 import { take } from 'rxjs';
+import { selectFilteredFlights } from '../+state/flight-booking.selectors';
 
 @Component({
   selector: 'flight-search',
@@ -23,7 +24,7 @@ export class FlightSearchComponent {
     5: true
   };
 
-  readonly flights$ = this.store.select((appState) => appState[flightBookingFeatureKey].flights);
+  readonly flights$ = this.store.select(selectFilteredFlights);
 
   constructor(
     private flightService: FlightService,
