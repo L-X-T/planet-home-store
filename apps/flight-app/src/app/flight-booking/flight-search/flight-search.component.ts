@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component } from '@angular/core';
-import { Flight, FlightService } from '@flight-workspace/flight-lib';
+import { FlightService } from '@flight-workspace/flight-lib';
 import { flightBookingFeatureKey, FlightBookingAppState } from '../+state/flight-booking.reducer';
 import { Store } from '@ngrx/store';
 import { FlightBookingActions } from '../+state/flight-booking.actions';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'flight-search',
@@ -29,10 +30,6 @@ export class FlightSearchComponent {
     private store: Store<FlightBookingAppState>
   ) {}
 
-  get flights(): Flight[] {
-    return this.flightService.flights;
-  }
-
   search(): void {
     if (!this.from || !this.to) {
       return;
@@ -51,6 +48,12 @@ export class FlightSearchComponent {
   }
 
   delay(): void {
-    this.flightService.delay();
+    this.flights$.pipe(take(1)).subscribe((flights) => {
+      const oldDate = new Date(flights[0].date);
+      const newDate = new Date(oldDate.getTime() + 15 * 60 * 1000);
+      const flight = { ...flights[0], date: newDate.toISOString() };
+
+      this.store.dispatch(FlightBookingActions.updateFlight({ flight }));
+    });
   }
 }

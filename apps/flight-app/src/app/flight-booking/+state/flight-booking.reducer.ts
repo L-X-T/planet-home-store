@@ -11,5 +11,10 @@ export interface FlightBookingAppState {
 export const reducer = createReducer(
   initialState,
 
-  on(FlightBookingActions.loadFlightsSuccess, (state, { flights }): FlightBookingState => ({ ...state, flights }))
+  on(FlightBookingActions.loadFlightsSuccess, (state, { flights }): FlightBookingState => ({ ...state, flights })),
+
+  on(FlightBookingActions.updateFlight, (state, { flight }): FlightBookingState => {
+    const flights = state.flights.map((f) => (f.id === flight.id ? flight : f));
+    return { ...state, flights };
+  })
 );
