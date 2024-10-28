@@ -6,7 +6,7 @@ import { FlightBookingAppState } from '../+state/flight-booking.reducer';
 import { Store } from '@ngrx/store';
 import { FlightBookingActions } from '../+state/flight-booking.actions';
 import { take } from 'rxjs';
-import { selectFilteredFlights } from '../+state/flight-booking.selectors';
+import { selectFlightsWithProps } from '../+state/flight-booking.selectors';
 
 @Component({
   selector: 'flight-search',
@@ -24,7 +24,7 @@ export class FlightSearchComponent {
     5: true
   };
 
-  readonly flights$ = this.store.select(selectFilteredFlights);
+  readonly flights$ = this.store.select(selectFlightsWithProps({ blackList: [3] }));
 
   constructor(
     private flightService: FlightService,
