@@ -38,14 +38,22 @@ export class FlightSearchComponent {
 
     // this.flightService.load(this.from, this.to, this.urgent);
 
-    this.flightService.find(this.from, this.to, this.urgent).subscribe({
+    /*this.flightService.find(this.from, this.to, this.urgent).subscribe({
       next: (flights) => {
         this.store.dispatch(FlightBookingActions.loadFlightsSuccess({ flights }));
       },
       error: (err) => {
         console.error('error', err);
       }
-    });
+    });*/
+
+    this.store.dispatch(
+      FlightBookingActions.loadFlights({
+        from: this.from,
+        to: this.to,
+        urgent: this.urgent
+      })
+    );
   }
 
   delay(): void {
