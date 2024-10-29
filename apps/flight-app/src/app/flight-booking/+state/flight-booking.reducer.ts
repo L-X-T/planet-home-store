@@ -11,7 +11,20 @@ export interface FlightBookingAppState {
 export const reducer = createReducer(
   initialState,
 
-  on(FlightBookingActions.loadFlightsSuccess, (state, { flights }): FlightBookingState => ({ ...state, flights })),
+  on(
+    FlightBookingActions.loadFlights,
+    (state): FlightBookingState => ({ ...state, flights: [], isLoadingFlights: true, flightsLoadError: null })
+  ),
+
+  on(
+    FlightBookingActions.loadFlightsFailure,
+    (state, { err }): FlightBookingState => ({ ...state, flights: [], isLoadingFlights: false, flightsLoadError: err })
+  ),
+
+  on(
+    FlightBookingActions.loadFlightsSuccess,
+    (state, { flights }): FlightBookingState => ({ ...state, flights, isLoadingFlights: false, flightsLoadError: null })
+  ),
 
   on(FlightBookingActions.updateFlight, (state, action): FlightBookingState => {
     const flight = action.flight;

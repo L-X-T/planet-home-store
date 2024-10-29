@@ -27,6 +27,12 @@
 
           <div *ngIf="flights.length > 0">{{ flights.length }} flights found!</div>
         </ng-container>
+
+        <div *ngIf="isLoadingFlights$ | async">... loading flights ...</div>
+
+        <div *ngIf="flightsLoadError$ | async as httpErrorResponse" class="text-danger">
+          {{ httpErrorResponse.message }}
+        </div>
       </div>
     </form>
   </div>
