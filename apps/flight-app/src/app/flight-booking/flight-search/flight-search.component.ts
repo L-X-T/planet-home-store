@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Flight, FlightService } from '@flight-workspace/flight-lib';
+import { FlightBookingAppState } from '../+state/flight-booking.reducer';
+import { FlightBookingActions } from '../+state/flight-booking.actions';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
+import { delay, take } from 'rxjs';
 
 @Component({
   selector: 'flight-search',
@@ -19,21 +24,44 @@ export class FlightSearchComponent {
     5: true
   };
 
-  constructor(private flightService: FlightService) {}
+  protected readonly flights$ = this.store.select((s) => s.flightBooking.flights);
 
-  get flights(): Flight[] {
+  constructor(
+    private flightService: FlightService,
+    private store: Store<FlightBookingAppState>
+  ) {}
+
+  /*get flights(): Flight[] {
     return this.flightService.flights;
-  }
+  }*/
 
   search(): void {
     if (!this.from || !this.to) {
       return;
     }
 
-    this.flightService.load(this.from, this.to, this.urgent);
+    // this.flightService.load(this.from, this.to, this.urgent);
+
+    this.flightService.find(this.from, this.to, this.urgent).subscribe({
+      next: (flights) => {
+        this.store.dispatch(FlightBookingActions.loadFlightsSuccess({ flights }));
+      },
+      error: (err) => {
+        console.error('error', err);
+      }
+    });
   }
 
   delay(): void {
-    this.flightService.delay();
+    // this.flightService.delay();
+    this.flights$.pipe(take(1)).subscribe((flights) => {
+      if (flights.length > 0) {
+        const oldDate = new Date(flights[0].date);
+        const newDate = new Date(oldDate.getTime() + 15 * 60 * 1000);
+        const flight = { ...flights[0], date: newDate.toISOString() };
+
+        this.store.dispatch(FlightBookingActions.updateFlight({ flight }));
+      }
+    });
   }
 }
