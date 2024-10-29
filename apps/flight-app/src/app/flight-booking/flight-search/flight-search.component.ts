@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
-import { Component, inject } from '@angular/core';
-import { Flight, FlightService } from '@flight-workspace/flight-lib';
+import { Component } from '@angular/core';
+import { FlightService } from '@flight-workspace/flight-lib';
 import { FlightBookingAppState } from '../+state/flight-booking.reducer';
 import { FlightBookingActions } from '../+state/flight-booking.actions';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
-import { delay, take } from 'rxjs';
+import { take } from 'rxjs';
+import { selectFlightsWithProps } from '../+state/flight-booking.selectors';
 
 @Component({
   selector: 'flight-search',
@@ -24,7 +24,7 @@ export class FlightSearchComponent {
     5: true
   };
 
-  protected readonly flights$ = this.store.select((s) => s.flightBooking.flights);
+  protected readonly flights$ = this.store.select(selectFlightsWithProps({ blackList: [4] }));
 
   constructor(
     private flightService: FlightService,

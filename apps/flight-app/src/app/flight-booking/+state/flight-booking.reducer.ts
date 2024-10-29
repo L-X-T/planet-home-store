@@ -1,7 +1,6 @@
-import { createFeature, createReducer, on } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 import { FlightBookingActions } from './flight-booking.actions';
 import { FlightBookingState, initialState } from './flight-booking.state';
-import { state } from '@angular/animations';
 
 export const flightBookingFeatureKey = 'flightBooking';
 

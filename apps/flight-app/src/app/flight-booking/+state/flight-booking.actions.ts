@@ -1,4 +1,4 @@
-import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { createActionGroup, props } from '@ngrx/store';
 import { Flight } from '@flight-workspace/flight-lib';
 
 export const FlightBookingActions = createActionGroup({
