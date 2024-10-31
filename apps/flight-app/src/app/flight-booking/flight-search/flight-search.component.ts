@@ -27,6 +27,7 @@ export class FlightSearchComponent {
 
   // readonly flights$ = this.store.select((store) => store[flightBookingFeatureKey].flights);
   protected readonly flights$ = this.store.select(selectFlights);
+  protected readonly flights = this.store.selectSignal(selectFlights);
   protected readonly isLoadingFlight$ = this.store.select(selectIsLoadingFlights);
   protected readonly loadingFlightsError$ = this.store.select(selectLoadingFlightsError);
 
