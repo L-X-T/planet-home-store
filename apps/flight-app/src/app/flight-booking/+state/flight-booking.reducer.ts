@@ -20,6 +20,9 @@ export const reducer = createReducer(
   }),
 
   on(FlightBookingActions.loadFlightsSuccess, (state, { flights }): FlightBookingState => {
+    // step 3: check reducer
+    // better: check state tree in Redux DevTools
+    console.log('[store] flights:', flights);
     return { ...state, flights, isLoadingFlights: false };
   }),
 

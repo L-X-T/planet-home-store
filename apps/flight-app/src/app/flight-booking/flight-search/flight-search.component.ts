@@ -2,15 +2,12 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component } from '@angular/core';
 import { FlightService } from '@flight-workspace/flight-lib';
-import { FlightBookingAppState } from '../+state/flight-booking.reducer';
+import { FlightBookingAppState, flightBookingFeatureKey } from '../+state/flight-booking.reducer';
 import { Store } from '@ngrx/store';
 import { FlightBookingActions } from '../+state/flight-booking.actions';
-import { take } from 'rxjs';
-import {
-  selectFlightsWithProps,
-  selectIsLoadingFlights,
-  selectLoadingFlightsError
-} from '../+state/flight-booking.selectors';
+import { delay, take } from 'rxjs';
+import { selectFlights, selectIsLoadingFlights, selectLoadingFlightsError } from '../+state/flight-booking.selectors';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'flight-search',
@@ -18,24 +15,28 @@ import {
   styleUrls: ['./flight-search.component.css']
 })
 export class FlightSearchComponent {
-  from = 'Hamburg'; // in Germany
-  to = 'Graz'; // in Austria
-  urgent = false;
+  protected from = 'Hamburg'; // in Germany
+  protected to = 'Graz'; // in Austria
+  protected urgent = false;
 
   // "shopping basket" with selected flights
-  basket: { [id: number]: boolean } = {
+  protected basket: { [id: number]: boolean } = {
     3: true,
     5: true
   };
 
-  readonly flights$ = this.store.select(selectFlightsWithProps({ blackList: [3] }));
-  readonly isLoadingFlight$ = this.store.select(selectIsLoadingFlights);
-  readonly loadingFlightsError$ = this.store.select(selectLoadingFlightsError);
+  // readonly flights$ = this.store.select((store) => store[flightBookingFeatureKey].flights);
+  protected readonly flights$ = this.store.select(selectFlights);
+  protected readonly isLoadingFlight$ = this.store.select(selectIsLoadingFlights);
+  protected readonly loadingFlightsError$ = this.store.select(selectLoadingFlightsError);
 
   constructor(
     private flightService: FlightService,
     private store: Store<FlightBookingAppState>
-  ) {}
+  ) {
+    // step 4: check if flights reach my component
+    this.flights$.pipe(takeUntilDestroyed()).subscribe((flights) => console.log('[comp] flights:', flights));
+  }
 
   search(): void {
     if (!this.from || !this.to) {
