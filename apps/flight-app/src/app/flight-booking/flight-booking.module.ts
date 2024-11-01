@@ -23,7 +23,13 @@ import { FlightBookingEffects } from './+state/flight-booking.effects';
     StoreModule.forFeature(fromFlightBooking.flightBookingFeatureKey, fromFlightBooking.reducer),
     EffectsModule.forFeature([FlightBookingEffects])
   ],
-  declarations: [FlightSearchComponent, FlightCardComponent, PassengerSearchComponent, FlightEditComponent, FlightBookingComponent],
+  declarations: [
+    FlightSearchComponent,
+    FlightCardComponent,
+    PassengerSearchComponent,
+    FlightEditComponent,
+    FlightBookingComponent
+  ],
   providers: [],
   exports: [FlightSearchComponent]
 })
