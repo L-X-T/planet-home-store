@@ -2,10 +2,10 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component } from '@angular/core';
 import { FlightService } from '@flight-workspace/flight-lib';
-import { FlightBookingAppState, flightBookingFeatureKey } from '../+state/flight-booking.reducer';
+import { FlightBookingAppState } from '../+state/flight-booking.reducer';
 import { Store } from '@ngrx/store';
 import { FlightBookingActions } from '../+state/flight-booking.actions';
-import { delay, take } from 'rxjs';
+import { take } from 'rxjs';
 import { selectFlights, selectIsLoadingFlights, selectLoadingFlightsError } from '../+state/flight-booking.selectors';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
